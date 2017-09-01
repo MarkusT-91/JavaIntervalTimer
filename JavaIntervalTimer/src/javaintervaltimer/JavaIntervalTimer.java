@@ -3,26 +3,48 @@ package javaintervaltimer;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 /**
  *
  * @author Markus Tuominen 2017
  */
 public class JavaIntervalTimer extends javax.swing.JFrame {
 
-    int counter = 30;
+    int restCounter = 0;
+    int intervalCounter = 0;
     
-    public void startTimer() {
+    //First a litlle bit of rest ro get ready for training
+    public void startRestTimer() {
         Timer timer = new Timer();
-        counter = 30;
-        
+        restCounter = 5;
+        startStopButton.setEnabled(false);
+
         TimerTask task = new TimerTask() {
             public void run() {
-                timeField.setText(Integer.toString(counter));
-                System.out.println(Integer.toString(counter));
-                counter--;
-                if(counter == - -1) {
+                timeField.setText(Integer.toString(restCounter));
+                System.out.println(Integer.toString(restCounter));
+                restCounter--;
+                if (restCounter <= -1) {
                     timer.cancel();
+                    startIntervalTimer();
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(task, 1000, 1000);
+    }
+
+    public void startIntervalTimer() {
+        Timer timer = new Timer();
+        intervalCounter = 30;
+        startStopButton.setEnabled(false);
+
+        TimerTask task = new TimerTask() {
+            public void run() {
+                timeField.setText(Integer.toString(intervalCounter));
+                System.out.println(Integer.toString(intervalCounter));
+                intervalCounter--;
+                if (intervalCounter <= -1) {
+                    timer.cancel();
+                    startStopButton.setEnabled(true);
                 }
             }
         };
@@ -97,7 +119,7 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void startStopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startStopButtonActionPerformed
-        startTimer();
+        startRestTimer();
     }//GEN-LAST:event_startStopButtonActionPerformed
 
     public static void main(String args[]) {

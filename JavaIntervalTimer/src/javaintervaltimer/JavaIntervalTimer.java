@@ -12,9 +12,10 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
 
     int restCounter = 0;
     int intervalCounter = 0;
+    int excerciseCounter = 0;
 
     //First a litlle bit of rest ro get ready for training
-    public void startRestTimer() {
+    public void startInitialRestTimer() {
         Timer timer = new Timer();
         restCounter = 5;
         startStopButton.setEnabled(false);
@@ -22,7 +23,6 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
         TimerTask task = new TimerTask() {
             public void run() {
                 timeField.setText(Integer.toString(restCounter));
-                System.out.println(Integer.toString(restCounter));
                 restCounter--;
 
                 if (restCounter < 20) {
@@ -43,35 +43,44 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
     }
 
     public void startIntervalTimer() {
-        Timer timer = new Timer();
-        intervalCounter = 30;
-        startStopButton.setEnabled(false);
+            Timer timer = new Timer();
+            intervalCounter = 10; // !!!!! This should be 30, for testing purposes it is 10 !!!!!!          
+            System.out.println(excerciseCounter);
+            startStopButton.setEnabled(false);
+            progressField.setText(Integer.toString(excerciseCounter + 1 ) + " / 3");
 
-        TimerTask task = new TimerTask() {
-            public void run() {
-                timeField.setText(Integer.toString(intervalCounter));
-                System.out.println(Integer.toString(intervalCounter));
-                intervalCounter--;
-                
-                if (intervalCounter > 20) {
-                    timeField.setForeground(Color.green);
-                }
-                
-                if (intervalCounter < 20) {
-                    timeField.setForeground(Color.yellow);
-                }
+            TimerTask task = new TimerTask() {
+                public void run() {
+                    timeField.setText(Integer.toString(intervalCounter));
+                    intervalCounter--;
 
-                if (intervalCounter < 10) {
-                    timeField.setForeground(Color.red);
-                }
+                    if (intervalCounter > 20) {
+                        timeField.setForeground(Color.green);
+                    }
 
-                if (intervalCounter <= -1) {
-                    timer.cancel();
-                    startStopButton.setEnabled(true);
+                    if (intervalCounter < 20) {
+                        timeField.setForeground(Color.yellow);
+                    }
+
+                    if (intervalCounter < 10) {
+                        timeField.setForeground(Color.red);
+                    }
+
+                    if (intervalCounter <= -1) {
+                        excerciseCounter++;
+                        if (excerciseCounter < 3) {
+                            timer.cancel();
+                            startIntervalTimer();
+                        } else {
+                            timer.cancel();
+                            startStopButton.setEnabled(true);
+                        }
+
+                    }
                 }
-            }
-        };
-        timer.scheduleAtFixedRate(task, 1000, 1000);
+            };
+            timer.scheduleAtFixedRate(task, 1000, 1000);
+
     }
 
     public JavaIntervalTimer() {
@@ -90,6 +99,7 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         timeField = new javax.swing.JTextField();
         startStopButton = new javax.swing.JButton();
+        progressField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -114,25 +124,46 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
             }
         });
 
+        progressField.setEditable(false);
+        progressField.setBackground(new java.awt.Color(0, 0, 0));
+        progressField.setFont(new java.awt.Font("Calibri", 0, 36)); // NOI18N
+        progressField.setForeground(new java.awt.Color(0, 255, 0));
+        progressField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        progressField.setBorder(null);
+        progressField.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        progressField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        progressField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                progressFieldActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(80, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(startStopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(timeField, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(80, 80, 80))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(startStopButton, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                            .addComponent(timeField, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                        .addGap(127, 127, 127))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(progressField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(176, 176, 176))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(71, 71, 71)
+                .addGap(46, 46, 46)
+                .addComponent(progressField, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(timeField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(startStopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -150,8 +181,13 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void startStopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startStopButtonActionPerformed
-        startRestTimer();
+
+        startInitialRestTimer();
     }//GEN-LAST:event_startStopButtonActionPerformed
+
+    private void progressFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_progressFieldActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -188,6 +224,7 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField progressField;
     private javax.swing.JButton startStopButton;
     private javax.swing.JTextField timeField;
     // End of variables declaration//GEN-END:variables

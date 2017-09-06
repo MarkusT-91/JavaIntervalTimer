@@ -15,7 +15,7 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
     int excerciseCounter = 0;
 
     //First a litlle bit of rest ro get ready for training
-    public void startInitialRestTimer() {
+    public void startRestTimer() {
         Timer timer = new Timer();
         restCounter = 5;
         startStopButton.setEnabled(false);
@@ -70,7 +70,7 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
                         excerciseCounter++;
                         if (excerciseCounter < 3) {
                             timer.cancel();
-                            startIntervalTimer();
+                            startRestTimer();
                         } else {
                             timer.cancel();
                             startStopButton.setEnabled(true);
@@ -182,7 +182,7 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
 
     private void startStopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startStopButtonActionPerformed
 
-        startInitialRestTimer();
+        startRestTimer();
     }//GEN-LAST:event_startStopButtonActionPerformed
 
     private void progressFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_progressFieldActionPerformed

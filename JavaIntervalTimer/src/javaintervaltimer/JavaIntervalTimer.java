@@ -12,9 +12,15 @@ import java.util.List;
  */
 public class JavaIntervalTimer extends javax.swing.JFrame {
 
-    int restCounter = 0;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	int restCounter = 0;
     int intervalCounter = 0;
     int excerciseCounter = 0;
+    String currentExcercise = "";
     
     List<String> listOfMoves = Arrays.asList("Squat", "Crunches", "Push up", "Running Plank", "Burpee", "Back extension");   
     
@@ -23,12 +29,14 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
         currentActivity.setText("");
         timeField.setText("");
         progressField.setText("");
+        currentExcercise = "";
+        excerciseCounter = 0;
     }
     
-    //First a litlle bit of rest ro get ready for training
+    //First a little bit of rest to get ready for training
     public void restTimer() {
         Timer timer = new Timer();
-        restCounter = 5;
+        restCounter = 10;
         startStopButton.setEnabled(false);
         
         currentActivity.setText("Rest!");
@@ -37,10 +45,6 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
             public void run() {
                 timeField.setText(Integer.toString(restCounter));
                 restCounter--;
-
-                if (restCounter < 20) {
-                    timeField.setForeground(Color.yellow);
-                }
 
                 if (restCounter < 10) {
                     timeField.setForeground(Color.red);
@@ -57,21 +61,20 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
 
     public void intervalTimer() {
             Timer timer = new Timer();
-            intervalCounter = 10; // !!!!! This should be 30, for testing purposes it is 10 !!!!!!          
-            System.out.println(excerciseCounter);
-            startStopButton.setEnabled(false);
+            intervalCounter = 30; 
+            startStopButton.setEnabled(false); // disable button when workout is ongoing. TODO: make it possible to pause workout
+                      
+            progressField.setText(Integer.toString(excerciseCounter + 1 ) + " / 6");
             
-            currentActivity.setText("Excerice!");
-            progressField.setText(Integer.toString(excerciseCounter + 1 ) + " / 3");
-            
-            
+            currentExcercise = listOfMoves.get(excerciseCounter); // get list of moves and show it 
+            currentActivity.setText(currentExcercise);
 
             TimerTask task = new TimerTask() {
                 public void run() {
                     timeField.setText(Integer.toString(intervalCounter));
                     intervalCounter--;
-
-                    if (intervalCounter > 20) {
+                    // change text color depending how much time is left
+                    if (intervalCounter < 30) {
                         timeField.setForeground(Color.green);
                     }
 
@@ -85,12 +88,12 @@ public class JavaIntervalTimer extends javax.swing.JFrame {
 
                     if (intervalCounter <= -1) {
                         excerciseCounter++;
-                        if (excerciseCounter < 3) {
+                        if (excerciseCounter < 6) {
                             timer.cancel();
-                            restTimer();
+                            restTimer(); //if timer is smaller than all of the exercises then just go to the restimer 
                         } else {
                             timer.cancel();
-                            initialState();
+                            initialState(); // else your workout is complete and timer will return to its intitial state
                         }
 
                     }
